@@ -7,17 +7,15 @@ import session from 'express-session';
 import connectRedis from 'connect-redis';
 import cors from 'cors';
 
-import { RegisterResolver } from './modules/user/Register';
 import { redis } from './redis';
-import { LoginResolver } from './modules/user/Login';
+
 import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core';
-import { MeResolver } from './modules/user/Me';
 
 const main = async () => {
   await createConnection();
 
   const schema = await buildSchema({
-    resolvers: [MeResolver, RegisterResolver, LoginResolver],
+    resolvers: [__dirname + '/modules/**/*.ts'],
     authChecker: ({ context: { req } }) => {
       return !!req.session.userId;
     },
